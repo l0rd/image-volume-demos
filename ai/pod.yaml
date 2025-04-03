@@ -1,0 +1,41 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with ramalama-0.6.4
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: smollm-service
+  labels:
+    app: smollm-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smollm-service
+  template:
+    metadata:
+      labels:
+        app: smollm-service
+    spec:
+      containers:
+      - name: smollm-service
+        image: quay.io/ramalama/ramalama:latest
+        command: ["llama-server"]
+        args: ['--port', '8080', '-m', '/mnt/models/model.file', '-c', '2048', '--temp', '0.8', '--host', '0.0.0.0']
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /mnt/models
+          subPath: /models
+          name: model
+        - mountPath: /dev/dri
+          name: dri
+      volumes:
+      - image:
+          reference: quay.io/ramalama/smollm:135m
+          pullPolicy: IfNotPresent
+        name: model
+      - hostPath:
+          path: /dev/dri
+        name: dri%
