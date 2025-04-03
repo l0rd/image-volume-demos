@@ -1,2 +1,2 @@
-# image-volume-demo
-Demos of usages of volumes of type images
+# Image Volumes Demos
+Demos of usages of mounting OCI images in containers
